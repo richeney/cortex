@@ -2,7 +2,7 @@
 
 ## Azure CLI
 
-```azurecli
+```bash
 az deployment create --name cortex --template-file azuredeploy.json --parameters "@azuredeploy.parameters.json"
 ```
 
@@ -29,7 +29,10 @@ Example data:
                 "value": "hack1mpsa"
             }
         },
-        "templateLink": "https://raw.githubusercontent.com/richeney/cortex/master/azuredeploy.json"
+        "templateLink": {
+            "uri": "https://raw.githubusercontent.com/richeney/cortex/master/azuredeploy.json",
+            "contentVersion": "1.0.0.0"
+        }
     }
 }
 ```
