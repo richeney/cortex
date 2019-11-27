@@ -1,0 +1,82 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "mprg": {
+            "type": "string",
+            "metadata": {
+                "description": "Marketing portal resource group name."
+            }
+        },
+        "mpsa": {
+            "type": "string",
+            "metadata": {
+                "description": "Marketing portal storage account prefix."
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "West Europe",
+            "metadata": {
+                "description": "Azure region."
+            }
+        },
+        "tags": {
+            "type": "object",
+            "defaultValue": {
+                "company": "Cortex",
+                "cloud": "Azure"
+            },
+            "metadata": {
+                "description": "JSON object containing default tags."
+            }
+        }
+    },
+    "variables": {
+        "repoUri": "https://github.com/richeney/cortex",
+        "baseUri": "[concat(replace(variables('repoUri'), 'github.com', 'raw.githubusercontent.com'), '/master/')]",
+        "uri": {
+            "sa": "[concat(variables('baseUri'), 'nested/sa.json')]",
+            "nextResource": "[concat(variables('baseUri'), 'nested/nextResource.json')]"
+        },
+        "deploymentName": {
+            "sa": "deployStorage"
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('mprg')]",
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2019-05-01",
+            "location": "[parameters('location')]",
+            "properties": {},
+            "tags": "[parameters('tags')]"
+        },
+        {
+            "name": "storage",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-08-01",
+            "resourceGroup": "[parameters('mprg')]",
+            "dependsOn": [
+                "[parameters('mprg')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {
+                    "saBane": {
+                        "value": "[parameters('mpsa')]"
+                    }
+                },
+                "templateLink": {
+                    "uri": "[variables('uri').sa]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "saName": {
+            "type": "string",
+            "value": "[reference(variables('deploymentname').sa).outputs.saName.value]"
+        }
+    }
+}
