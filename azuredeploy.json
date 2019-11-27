@@ -53,7 +53,7 @@
             "tags": "[parameters('tags')]"
         },
         {
-            "name": "storage",
+            "name": "[variables('deploymentName').sa]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-08-01",
             "resourceGroup": "[parameters('mprg')]",
@@ -63,7 +63,7 @@
             "properties": {
                 "mode": "Incremental",
                 "parameters": {
-                    "saBane": {
+                    "storageAccountPrefix": {
                         "value": "[parameters('mpsa')]"
                     }
                 },
